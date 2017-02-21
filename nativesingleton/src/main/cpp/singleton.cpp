@@ -6,38 +6,31 @@
 #define  LOG_TAG    "NDK_TEST"
 #define  ALOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
-JNIEXPORT jobject Java_com_rouddy_nativesingleton_NativeSingleton_getSingleton(JNIEnv* env, jclass clazz, jstring clsName)
+JNIEXPORT jobject Java_com_rouddy_nativesingleton_NativeSingleton_getSingleton(JNIEnv* env, jclass clazz, jobject clsObject)
 {
-	const char *chName = env->GetStringUTFChars(clsName, 0);
-	std::string strName(chName);
-	env->ReleaseStringUTFChars(clsName, chName);
-	return Singleton::getSingleton(strName);
+	return Singleton::getSingleton(clazz);
 }
 
-JNIEXPORT void Java_com_rouddy_nativesingleton_NativeSingleton_setSingleton(JNIEnv* env, jclass clazz, jstring clsName, jobject object)
+JNIEXPORT void Java_com_rouddy_nativesingleton_NativeSingleton_setSingleton(JNIEnv* env, jclass clazz, jobject clsObject, jobject object)
 {
-	const char *chName = env->GetStringUTFChars(clsName, 0);
-	std::string strName(chName);
-	env->ReleaseStringUTFChars(clsName, chName);
 	jobject globalObj = env->NewGlobalRef(object);
 
-	Singleton::setSingleton(strName, globalObj);
+	Singleton::setSingleton(clazz, globalObj);
 }
 
-std::map<std::string, jobject> Singleton::instanceMap;
+std::map<jobject, jobject> Singleton::instanceMap;
 
-jobject Singleton::getSingleton(std::string clsName)
+jobject Singleton::getSingleton(jobject clsObject)
 {
-	auto iter = instanceMap.find(clsName);
-	if (iter == instanceMap.end())
-	{
+	auto iter = instanceMap.find(clsObject);
+	if (iter == instanceMap.end()) {
 		return NULL;
 	}
 
-	return instanceMap[clsName];
+	return instanceMap[clsObject];
 }
 
-void Singleton::setSingleton(std::string clsName, jobject object)
+void Singleton::setSingleton(jobject clsObject, jobject object)
 {
-	instanceMap[clsName] = object;
+	instanceMap[clsObject] = object;
 }
