@@ -13,11 +13,12 @@ public abstract class NativeSingleton {
 	}
 
 	public static NativeSingleton getInstance(Class<? extends NativeSingleton> clazz) {
-		NativeSingleton instance = getSingleton(clazz);
+		String strClass = clazz.getName();
+		NativeSingleton instance = getSingleton(strClass);
 		if (instance == null) {
 			try {
 				instance = clazz.newInstance();
-				setSingleton(clazz, instance);
+				setSingleton(strClass, instance);
 			} catch (InstantiationException e) {
 				throw new RuntimeException("cannot create instance", e);
 			} catch (IllegalAccessException e) {
@@ -28,6 +29,6 @@ public abstract class NativeSingleton {
 		return instance;
 	}
 
-	private native static NativeSingleton getSingleton(Class clazz);
-	private native static void setSingleton(Class clazz, NativeSingleton object);
+	private native static NativeSingleton getSingleton(String clsName);
+	private native static void setSingleton(String clsName, NativeSingleton object);
 }

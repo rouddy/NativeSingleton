@@ -11,9 +11,9 @@
 extern "C" {
 #endif
 
-JNIEXPORT jobject Java_com_rouddy_nativesingleton_NativeSingleton_getSingleton(JNIEnv* env, jclass clazz, jobject clsObject);
+JNIEXPORT jobject Java_com_rouddy_nativesingleton_NativeSingleton_getSingleton(JNIEnv* env, jclass clazz, jstring clsName);
 
-JNIEXPORT void Java_com_rouddy_nativesingleton_NativeSingleton_setSingleton(JNIEnv* env, jclass clazz, jobject clsObject, jobject object);
+JNIEXPORT void Java_com_rouddy_nativesingleton_NativeSingleton_setSingleton(JNIEnv* env, jclass clazz, jstring clsName, jobject object);
 
 #ifdef __cplusplus
 }
@@ -21,11 +21,11 @@ JNIEXPORT void Java_com_rouddy_nativesingleton_NativeSingleton_setSingleton(JNIE
 
 class Singleton {
 private:
-	static std::map<jobject, jobject> instanceMap;
+	static std::map<std::string, jobject> instanceMap;
 
 public:
-	static jobject getSingleton(jobject clsObject);
-	static void setSingleton(jobject clsObject, jobject object);
+	static jobject getSingleton(std::string clsName);
+	static void setSingleton(std::string clsName, jobject object);
 };
 
 #endif
